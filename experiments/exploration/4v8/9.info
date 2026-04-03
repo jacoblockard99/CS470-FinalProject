@@ -1,0 +1,2 @@
+Output: ../exploration/4v8/9
+Command: ./play 4 8 ../../bin/stockfish-original ../positions/james.epd --clock1 2 --clock2 2 --pos-start 360 --pos-end 400

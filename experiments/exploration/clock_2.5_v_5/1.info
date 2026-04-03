@@ -1,0 +1,2 @@
+Output: ../exploration/out/1
+Command: ./play 4 4 ../../src/stockfish ../positions/james50.epd --clock1 5 --clock2 2.5 --pos-start 25 --pos-end 50
