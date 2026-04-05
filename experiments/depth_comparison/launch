@@ -1,0 +1,37 @@
+#!/bin/ruby
+
+require 'optparse'
+
+if ARGV.size != 5
+    puts "Usage: ./launch position_files depths1 depths2 threads nodes\n\n"
+    puts "Simulates games with one thread against the given number of threads with the given clock time limit starting at the given positions, repeating the given number of times."
+    exit 1
+end
+
+trial=`date +%s`
+trial.chomp!
+
+positions = ARGV[0].split(" ")
+depths1 = ARGV[1].split(" ")
+depths2 = ARGV[2].split(" ")
+threads = ARGV[3].split(" ")
+nodes = ARGV[4]
+
+`mkdir -p output`
+`mkdir -p output/#{trial}`
+
+dir = Dir.pwd
+Dir.chdir("../framework")
+
+positions.each do |pos|
+    pos_file = "../positions/#{pos}"
+    depths1.each do |depth1|
+        depths2.each do |depth2|
+            threads.each do |thread_count|
+                args = "#{thread_count} #{thread_count} ../../bin/stockfish-original #{pos_file} --depth1 #{depth1} --depth2 #{depth2}"
+                `../framework/launch_positions #{dir}/output/#{trial}/#{pos}__#{depth1}__#{depth2}__#{thread_count} #{pos_file} #{nodes} \"#{args}\"`
+                puts "Queued: Pos #{pos}, Depth 1 #{depth1}, Depth 2 #{depth2}, Thread #{thread_count}"
+            end
+        end
+    end
+end

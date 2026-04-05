@@ -31,6 +31,7 @@ parser.add_argument("--clock2", help="Limit total clock time (s) for second Stoc
 
 parser.add_argument("--repeat", help="Repeat all the positions the given number of times.", type=int, default=1)
 parser.add_argument("--verbose", help="Print all board positions.", action="store_true")
+parser.add_argument("--just-one", help="Only play one game, with engine 1 being white.", action="store_true")
 
 parser.add_argument("--pos-start", help="Start at the given index (inclusive) in the positions file.", type=int, default=0)
 parser.add_argument("--pos-end", help="End at the given index (exclusive) in the positions file.", type=int, default=-1)
@@ -104,13 +105,16 @@ def simulate_game(white, black, start_pos, white_limits, black_limits):
         cur_limits.black_clock -= elapsed
         if cur_limits.white_clock <= 0.001 or cur_limits.black_clock <= 0.001:
             return "black" if cur == white else "white"
+
+        if args.verbose:
+            print(cur_limits)
+            print(f"Elapsed: {elapsed}")
+            print("")
+            print(board, flush=True)
+
         # Toggle player.
         cur = black if cur == white else white
         cur_limits = black_limits if cur_limits == white_limits else white_limits
-
-        if args.verbose:
-            print(board, flush=True)
-            print("")
 
     # Figure out result
     if board.result() == "1-0":
@@ -142,15 +146,17 @@ for i in range(args.repeat):
             e2wins +=1
         else:
             draws += 1
-        # Now have engine2 start:
-        reset_clock()
-        result = simulate_game(engine2, engine1, position, limits1, limits2)
-        if result == "white":
-            e2wins += 1
-        elif result == "black":
-            e1wins +=1
-        else:
-            draws += 1
+
+        if not args.just_one:
+            # Now have engine2 start:
+            reset_clock()
+            result = simulate_game(engine2, engine1, position, limits1, limits2)
+            if result == "white":
+                e2wins += 1
+            elif result == "black":
+                e1wins +=1
+            else:
+                draws += 1
 end = time.perf_counter()
 
 # Print stats.
