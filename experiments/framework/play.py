@@ -80,19 +80,15 @@ def reset_clock():
     limits2.white_clock = args.clock2
     limits2.black_clock = args.clock2
 
-# NOTE: start_pos
-
 def simulate_game(white, black, start_pos, white_limits, black_limits):
     cur = white # current engine
     cur_limits = white_limits # current engine's limits
 
-    print(position)
-
     if args.positions.endswith(".epd"):
         board = chess.Board()
-        board.set_epd(position)
+        board.set_epd(start_pos)
     else:
-        board = chess.Board(position)
+        board = chess.Board(start_pos)
 
     # Reset both engines for a new game.
     white.protocol.send_line("ucinewgame")
