@@ -1,0 +1,20 @@
+#!/bin/ruby
+
+out = ""
+
+out += "Trial Pos Threads Nodes One Two Draws Games Time\n"
+Dir.each_child("output") do |trial|
+    Dir.each_child("output/#{trial}") do |item|
+        pos, threads, nodes = item.split("__")
+        path = File.join("output", trial, item)
+        lines = `../framework/aggregate #{path}`.split("\n")
+
+        next if lines.empty?
+
+        one, two, draw = lines.first.split(" ")
+        time = lines[2].split(" ")[1]
+        out += "#{trial} #{pos} #{threads} #{nodes} #{one} #{two} #{draw} #{one.to_i+two.to_i+draw.to_i} #{time}\n"
+    end
+end
+
+File.write("results.txt", out)

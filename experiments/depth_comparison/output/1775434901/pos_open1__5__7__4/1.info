@@ -1,0 +1,2 @@
+Output: /nfs/home/lockarjl/CS470-FinalProject/experiments/depth_comparison/output/1775434901/pos_open1__5__7__4/1
+Command: ./play 4 4 ../../bin/stockfish-original ../positions/pos_open1 --depth1 5 --depth2 7 --pos-start 2 --pos-end 4

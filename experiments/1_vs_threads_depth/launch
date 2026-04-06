@@ -4,7 +4,9 @@ require 'optparse'
 
 if ARGV.size != 4
     puts "Usage: ./launch position_files opponent_threads depth nodes\n\n"
-    puts "Simulates games with one thread against the given number of threads with the given clock time limit starting at the given positions, repeating the given number of times."
+    puts "Simulates games with one thread against the given numbers of threads with the given depth limits starting at the given positions."
+    puts "Each argument is a space-delimited list of values. All permutations of the given options will be queued."
+    puts "The given number of SLURM jobs will be queued for each permutation; the work will be split among the jobs."
     exit 1
 end
 

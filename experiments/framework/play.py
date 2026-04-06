@@ -80,9 +80,13 @@ def reset_clock():
     limits2.white_clock = args.clock2
     limits2.black_clock = args.clock2
 
+# NOTE: start_pos
+
 def simulate_game(white, black, start_pos, white_limits, black_limits):
     cur = white # current engine
     cur_limits = white_limits # current engine's limits
+
+    print(position)
 
     if args.positions.endswith(".epd"):
         board = chess.Board()
@@ -150,7 +154,7 @@ for i in range(args.repeat):
         if not args.just_one:
             # Now have engine2 start:
             reset_clock()
-            result = simulate_game(engine2, engine1, position, limits1, limits2)
+            result = simulate_game(engine2, engine1, position, limits2, limits1)
             if result == "white":
                 e2wins += 1
             elif result == "black":

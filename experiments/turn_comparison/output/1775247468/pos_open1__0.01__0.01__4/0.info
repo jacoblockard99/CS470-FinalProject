@@ -1,2 +1,0 @@
-Output: /nfs/home/lockarjl/CS470-FinalProject/experiments/turn_comparison/output/1775247468/pos_open1__0.01__0.01__4/0
-Command: ./play 4 4 ../../bin/stockfish-original ../positions/pos_open1 --turn1 0.01 --turn2 0.01 --pos-start 0 --pos-end 10

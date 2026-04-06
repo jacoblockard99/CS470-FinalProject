@@ -1,2 +1,0 @@
-Output: /nfs/home/lockarjl/CS470-FinalProject/experiments/clock_comparison/output/1775246130/james50.epd__1__4__4/1
-Command: ./play 4 4 ../../bin/stockfish-original ../positions/james50.epd --clock1 1 --clock2 4 --pos-start 25 --pos-end 50

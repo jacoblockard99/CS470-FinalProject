@@ -1,0 +1,2 @@
+Output: /nfs/home/lockarjl/CS470-FinalProject/experiments/clock_comparison/output/1775434969/pos_open1__1__2__4/4
+Command: ./play 4 4 ../../bin/stockfish-original ../positions/pos_open1 --clock1 1 --clock2 2 --pos-start 8 --pos-end 10
