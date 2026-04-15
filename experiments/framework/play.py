@@ -36,14 +36,19 @@ parser.add_argument("--just-one", help="Only play one game, with engine 1 being 
 parser.add_argument("--pos-start", help="Start at the given index (inclusive) in the positions file.", type=int, default=0)
 parser.add_argument("--pos-end", help="End at the given index (exclusive) in the positions file.", type=int, default=-1)
 
+parser.add_argument("--stockfish2", help="Path to the stockfish executable for the second engine.", default="")
+
 args = parser.parse_args()
 
 # Launch the Stockfish servers.
 
+if args.stockfish2 == "":
+    args.stockfish2 = args.stockfish
+
 engine1 = chess.engine.SimpleEngine.popen_uci(args.stockfish)
 engine1.configure({"Threads": args.threads1})
 
-engine2 = chess.engine.SimpleEngine.popen_uci(args.stockfish)
+engine2 = chess.engine.SimpleEngine.popen_uci(args.stockfish2)
 engine2.configure({"Threads": args.threads2})
 
 # Read the positions file.
