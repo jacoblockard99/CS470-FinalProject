@@ -101,8 +101,7 @@ def reset_clock():
     limits2.black_clock = args.clock2
 
 def simulate_game(white, black, start_pos, white_limits, black_limits):
-    cur = white # current engine
-    cur_limits = white_limits # current engine's limits
+    
 
     if args.positions.endswith(".epd"):
         board = chess.Board()
@@ -114,6 +113,13 @@ def simulate_game(white, black, start_pos, white_limits, black_limits):
     white.protocol.send_line("ucinewgame")
     black.protocol.send_line("ucinewgame")
 
+    if board.turn == chess.WHITE:
+        cur = white # current engine
+        cur_limits = white_limits # current engine's limits
+    else:
+        cur = black
+        cur_limits = black_limits
+
     while not board.is_game_over():
         # Play the current player.
         start = time.perf_counter()
@@ -124,7 +130,7 @@ def simulate_game(white, black, start_pos, white_limits, black_limits):
         cur_limits.white_clock -= elapsed
         cur_limits.black_clock -= elapsed
         if cur_limits.white_clock <= 0.001 or cur_limits.black_clock <= 0.001:
-            return "black" if cur == white else "white"
+            return "timeout"
 
         if args.verbose:
             print(cur_limits)
@@ -164,6 +170,8 @@ for i in range(args.repeat):
             e1wins += 1
         elif result == "black":
             e2wins +=1
+        elif result == "timeout":
+            pass
         else:
             draws += 1
 
@@ -175,6 +183,8 @@ for i in range(args.repeat):
                 e2wins += 1
             elif result == "black":
                 e1wins +=1
+            elif result == "timeout":
+                pass
             else:
                 draws += 1
 end = time.perf_counter()
