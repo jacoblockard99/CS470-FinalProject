@@ -29,6 +29,9 @@ parser.add_argument("--turn2", help="Limit turn time (s) for second Stockfish en
 parser.add_argument("--clock1", help="Limit total clock time (s) for first Stockfish engine.", type=float, default=60)
 parser.add_argument("--clock2", help="Limit total clock time (s) for second Stockfish engine.", type=float, default=60)
 
+parser.add_argument("--tt-size1", help="Limit transposition table size (mb) for first Stockfish engine.", type=float, default=-1)
+parser.add_argument("--tt-size2", help="Limit transposition table size (mb) for first Stockfish engine.", type=float, default=-1)
+
 parser.add_argument("--repeat", help="Repeat all the positions the given number of times.", type=int, default=1)
 parser.add_argument("--verbose", help="Print all board positions.", action="store_true")
 parser.add_argument("--just-one", help="Only play one game, with engine 1 being white.", action="store_true")
@@ -45,11 +48,23 @@ args = parser.parse_args()
 if args.stockfish2 == "":
     args.stockfish2 = args.stockfish
 
+
+options1 = {}
+options2 = {}
+
+if args.tt_size1 != -1:
+    options1["Hash"] = args.tt_size1
+options1["Threads"] = args.threads1
+
+if args.tt_size2 != -1:
+    options2["Hash"] = args.tt_size2
+options2["Threads"] = args.threads2
+
 engine1 = chess.engine.SimpleEngine.popen_uci(args.stockfish)
-engine1.configure({"Threads": args.threads1})
+engine1.configure(options1)
 
 engine2 = chess.engine.SimpleEngine.popen_uci(args.stockfish2)
-engine2.configure({"Threads": args.threads2})
+engine2.configure(options2)
 
 # Read the positions file.
 
