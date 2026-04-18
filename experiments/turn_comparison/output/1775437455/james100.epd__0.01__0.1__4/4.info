@@ -1,2 +1,0 @@
-Output: /nfs/home/lockarjl/CS470-FinalProject/experiments/turn_comparison/output/1775437455/james100.epd__0.01__0.1__4/4
-Command: ./play 4 4 ../../bin/stockfish-original ../positions/james100.epd --turn1 0.01 --turn2 0.1 --pos-start 40 --pos-end 50

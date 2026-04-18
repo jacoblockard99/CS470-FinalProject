@@ -1,2 +1,0 @@
-Output: /nfs/home/lockarjl/CS470-FinalProject/experiments/depth_comparison/output/1775435126/james100.epd__5__5__4/9
-Command: ./play 4 4 ../../bin/stockfish-original ../positions/james100.epd --depth1 5 --depth2 5 --pos-start 90 --pos-end 100

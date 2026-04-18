@@ -1,2 +1,0 @@
-Output: /nfs/home/lockarjl/Stockfish-CS470/experiments/1_vs_threads_depth/output/1775237309/pos_open2__16__15/1
-Command: ./play 1 16 ../../src/stockfish ../positions/pos_open2 --depth1 15 --depth2 15 --pos-start 10 --pos-end 20

@@ -1,2 +1,0 @@
-Output: /nfs/home/lockarjl/Stockfish-CS470/experiments/fix_nodes/output/1775232402/pos_open2__8__100000/0
-Command: ./play 1 8 ../../src/stockfish ../positions/pos_open2 --nodes1 100000 --nodes2 100000 --pos-start 0 --pos-end 20
