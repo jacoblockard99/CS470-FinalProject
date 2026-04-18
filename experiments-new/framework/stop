@@ -1,0 +1,5 @@
+#!/bin/ruby
+
+if File.exists?('.queue-lock')
+    `kill #{File.read(".queue-lock")}`
+end

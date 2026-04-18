@@ -1,1 +1,5 @@
 __pycache__
+.queue-lock
+daemon.log
+finished.txt
+queue.txt

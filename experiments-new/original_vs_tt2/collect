@@ -1,0 +1,20 @@
+#!/bin/ruby
+
+out = ""
+
+Dir.each_child("output") do |trial|
+    Dir.each_child("output/#{trial}") do |item|
+        pos, threads, depth = item.split("__")
+        path = File.join("output", trial, item)
+        lines = `../framework/aggregate #{path}`.split("\n")
+
+        next if lines.empty?
+
+        one, two, draw = lines.first.split(" ")
+        out += "#{trial} #{pos} #{threads} #{depth} #{one} #{two} #{draw} #{one.to_i+two.to_i+draw.to_i}\n"
+    end
+end
+
+`rm -f results.txt`
+`cp saved.txt results.txt`
+File.write("results.txt", out, mode: 'a+')

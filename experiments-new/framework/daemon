@@ -1,0 +1,95 @@
+#!/bin/ruby
+
+require 'optparse'
+
+def _log(s)
+  print "#{Time.now}:  "
+  puts s
+end
+
+def log(s)
+  s.lines.each { |l| _log l }
+end
+
+running = true
+Signal.trap("TERM") { log 'Received TERM signal... Exiting soon'; running = false }
+Signal.trap("INT")  { log 'Received INT signal... Exiting soon'; running = false } # Handles Ctrl+C
+
+options = {
+  interval: 30
+}
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: ./daemon nodes [options]"
+
+  opts.on("-n INTERVAL", "--interval INTERVAL", "Number of seconds to wait before checking queue again. (Default 30)") { |n| options[:interval] = n.to_i }
+end
+parser.parse!
+
+if ARGV.count != 1
+  puts parser.help
+  exit 1
+end
+
+$nodes = ARGV[0].to_i
+
+$me = `whoami`
+
+if File.exists?('.queue-lock')
+  puts "Daemon already running!"
+  exit 1
+end
+
+at_exit do
+  `rm -f .queue-lock`
+  log "\n=====> Daemon exiting! <======\n"
+end
+
+Process.daemon(true, true)
+$stdout.reopen("daemon.log", "a")
+$stderr.reopen("daemon.log", "a")
+
+File.write('.queue-lock', Process.pid)
+
+log "\n=====> Daemon launched! <======\n"
+log "Options:"
+log "  Interval:           #{options[:interval]} seconds"
+log "  Nodes:              #{$nodes}"
+log "  Log File:           daemon.log"
+log "  Queue File:         queue.txt"
+log "  Finished Jobs File: finished.txt"
+
+def scount
+  `squeue --user=#{$me}`.lines.count - 1
+end
+
+def check(queue)
+  log "------> Checking queue"
+  log "Queue:        #{queue.count}"
+  log "Running Jobs: #{scount}"
+
+  scount < $nodes && queue.size > 0
+end
+
+while running
+  queue = File.readlines('queue.txt')
+
+  while check(queue)
+    cmd = queue.first.chomp
+    log "------> Running command \"#{cmd}\""
+    print `#{cmd}`
+
+    exit 1 unless $?.success?
+    queue.shift
+    File.write('finished.txt', cmd + "\n", mode: 'a')
+    File.write('queue.txt', queue.join)
+
+    log "------> Finished command \"#{cmd}\""
+
+    sleep 0.5
+  end
+
+  break unless running
+  log "------> Waiting #{options[:interval]} seconds"
+  $stdout.flush
+  sleep options[:interval]
+end

@@ -1,0 +1,10 @@
+#!/bin/ruby
+
+print 'Are you sure? [y/N] '
+exit unless gets.chomp == 'y'
+
+`./collect`
+`rm -f saved.txt`
+`cp results.txt saved.txt`
+`rm -rf output`
+`mkdir output`

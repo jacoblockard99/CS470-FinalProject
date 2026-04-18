@@ -1,0 +1,39 @@
+#!/bin/ruby
+
+require 'optparse'
+
+if ARGV.size != 5
+    puts "Usage: ./launch position_files turns1 turns2 threads nodes\n\n"
+    puts "Simulates games with one turn time limit against the given turn time limits with the given thread counts starting at the given positions."
+    puts "Each argument is a space-delimited list of values. All permutations of the given options will be queued."
+    puts "The given number of SLURM jobs will be queued for each permutation; the work will be split among the jobs."
+    exit 1
+end
+
+trial=`date +%s`
+trial.chomp!
+
+positions = ARGV[0].split(" ")
+turns1 = ARGV[1].split(" ")
+turns2 = ARGV[2].split(" ")
+threads = ARGV[3].split(" ")
+nodes = ARGV[4]
+
+`mkdir -p output`
+`mkdir -p output/#{trial}`
+
+dir = Dir.pwd
+Dir.chdir("../framework")
+
+positions.each do |pos|
+    pos_file = "../positions/#{pos}"
+    turns1.each do |turn1|
+        turns2.each do |turn2|
+            threads.each do |thread_count|
+                args = "#{thread_count} #{thread_count} ../../bin/stockfish-original #{pos_file} --turn1 #{turn1} --turn2 #{turn2}"
+                `../framework/launch_positions #{dir}/output/#{trial}/#{pos}__#{turn1}__#{turn2}__#{thread_count} #{pos_file} #{nodes} \"#{args}\"`
+                puts "Queued: Pos #{pos}, Turn 1 #{turn1}, Turn 2 #{turn2}, Thread #{thread_count}"
+            end
+        end
+    end
+end
