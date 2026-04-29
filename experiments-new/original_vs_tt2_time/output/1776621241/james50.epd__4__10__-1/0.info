@@ -1,0 +1,2 @@
+Output: /nfs/home/lockarjl/CS470-FinalProject/experiments-new/original_vs_tt2_time/output/1776621241/james50.epd__4__10__-1/0
+Command: ./play 4 4 ../../bin/stockfish-original ../positions/james50.epd --stockfish2 ../../bin/stockfish_tt2 --clock1 10 --clock2 10 --tt-size1 -1 --tt-size2 -1 --pos-start 0 --pos-end 50

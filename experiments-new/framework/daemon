@@ -22,6 +22,7 @@ parser = OptionParser.new do |opts|
   opts.banner = "Usage: ./daemon nodes [options]"
 
   opts.on("-n INTERVAL", "--interval INTERVAL", "Number of seconds to wait before checking queue again. (Default 30)") { |n| options[:interval] = n.to_i }
+  opts.on("-l LIFETIME", "--lifetime LIFETIME", "Number of seconds to wait before quitting when the queue is empty. (Default 120)") { |n| options[:lifetime] = n.to_i }
 end
 parser.parse!
 
@@ -53,6 +54,7 @@ File.write('.queue-lock', Process.pid)
 log "\n=====> Daemon launched! <======\n"
 log "Options:"
 log "  Interval:           #{options[:interval]} seconds"
+log "  Lifetime:           #{options[:lifetime]} seconds"
 log "  Nodes:              #{$nodes}"
 log "  Log File:           daemon.log"
 log "  Queue File:         queue.txt"
@@ -67,8 +69,14 @@ def check(queue)
   log "Queue:        #{queue.count}"
   log "Running Jobs: #{scount}"
 
-  scount < $nodes && queue.size > 0
+  c = scount
+
+  $last = Time.now if c > 0 || queue.size > 0
+
+  c < $nodes && queue.size > 0
 end
+
+$last = Time.now
 
 while running
   queue = File.readlines('queue.txt')
@@ -89,6 +97,14 @@ while running
   end
 
   break unless running
+  if $last
+    dur = Time.now - $last
+    log "Time since last queue item: #{dur.round(1)} seconds"
+    if dur > options[:lifetime]
+      log "------> Queue has been empty for more than #{options[:lifetime]} seconds. Shutting down..."
+      break
+    end
+  end
   log "------> Waiting #{options[:interval]} seconds"
   $stdout.flush
   sleep options[:interval]

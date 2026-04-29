@@ -1,0 +1,2 @@
+Output: /nfs/home/lockarjl/CS470-FinalProject/experiments-new/fix_nodes_time/output/1776619946/james50.epd__8__100000/0
+Command: ./play 8 8 ../../bin/stockfish-original ../positions/james50.epd --nodes1 100000 --nodes2 100000 --pos-start 0 --pos-end 50

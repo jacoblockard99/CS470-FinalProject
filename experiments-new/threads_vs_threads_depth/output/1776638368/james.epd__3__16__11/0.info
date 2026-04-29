@@ -1,0 +1,2 @@
+Output: /nfs/home/lockarjl/CS470-FinalProject/experiments-new/threads_vs_threads_depth/output/1776638368/james.epd__3__16__11/0
+Command: ./play 3 16 ../../bin/stockfish-original ../positions/james.epd --depth1 11 --depth2 11 --pos-start 0 --pos-end 400

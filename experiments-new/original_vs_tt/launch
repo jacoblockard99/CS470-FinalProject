@@ -2,8 +2,8 @@
 
 require 'optparse'
 
-if ARGV.size != 4
-    puts "Usage: ./launch position_files threads depths nodes\n\n"
+if ARGV.size != 5
+    puts "Usage: ./launch position_files threads depths ttsizes nodes\n\n"
     puts "Simulates games with one thread against the given numbers of threads with the given clock time limits starting at the given positions."
     puts "Each argument is a space-delimited list of values. All permutations of the given options will be queued."
     puts "The given number of SLURM jobs will be queued for each permutation; the work will be split among the jobs."
@@ -16,7 +16,8 @@ trial.chomp!
 positions = ARGV[0].split(" ")
 threads = ARGV[1].split(" ")
 depths = ARGV[2].split(" ")
-nodes = ARGV[3]
+ttsizes = ARGV[3].split(" ")
+nodes = ARGV[4]
 
 `mkdir -p output`
 `mkdir -p output/#{trial}`
@@ -28,9 +29,11 @@ positions.each do |pos|
     pos_file = "../positions/#{pos}"
     threads.each do |thread_count|
         depths.each do |depth|
-            args = "#{thread_count} #{thread_count} ../../bin/stockfish-original #{pos_file} --stockfish2 ../../bin/stockfish_tt --depth1 #{depth} --depth2 #{depth}"
-            `../framework/launch_positions #{dir}/output/#{trial}/#{pos}__#{thread_count}__#{depth} #{pos_file} #{nodes} \"#{args}\"`
-            puts "Queued: Pos #{pos}, Thread #{thread_count}, Depth #{depth}"
+            ttsizes.each do |ttsize|
+                args = "#{thread_count} #{thread_count} ../../bin/stockfish-original #{pos_file} --stockfish2 ../../bin/stockfish_tt --depth1 #{depth} --depth2 #{depth} --tt-size1 #{ttsize} --tt-size2 #{ttsize}"
+                `../framework/launch_positions #{dir}/output/#{trial}/#{pos}__#{thread_count}__#{depth}__#{ttsize} #{pos_file} #{nodes} \"#{args}\"`
+                puts "Queued: Pos #{pos}, Thread #{thread_count}, Depth #{depth}, TTSize #{ttsize}"
+            end
         end
     end
 end

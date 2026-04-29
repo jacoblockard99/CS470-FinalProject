@@ -1,0 +1,39 @@
+#!/bin/ruby
+
+require 'optparse'
+
+if ARGV.size != 5
+    puts "Usage: ./launch position_files threads1 threads2 depth nodes\n\n"
+    puts "Simulates games with one thread against the given numbers of threads with the given depth limits starting at the given positions."
+    puts "Each argument is a space-delimited list of values. All permutations of the given options will be queued."
+    puts "The given number of SLURM jobs will be queued for each permutation; the work will be split among the jobs."
+    exit 1
+end
+
+trial=`date +%s`
+trial.chomp!
+
+positions = ARGV[0].split(" ")
+threads1 = ARGV[1].split(" ")
+threads2 = ARGV[2].split(" ")
+depths = ARGV[3].split(" ")
+nodes = ARGV[4]
+
+`mkdir -p output`
+`mkdir -p output/#{trial}`
+
+dir = Dir.pwd
+Dir.chdir("../framework")
+
+positions.each do |pos|
+    pos_file = "../positions/#{pos}"
+    threads1.each do |thread_count1|
+        threads2.each do |thread_count2|
+            depths.each do |depth|
+                args = "#{thread_count1} #{thread_count2} ../../bin/stockfish-original #{pos_file} --depth1 #{depth} --depth2 #{depth}"
+                `../framework/launch_positions #{dir}/output/#{trial}/#{pos}__#{thread_count1}__#{thread_count2}__#{depth} #{pos_file} #{nodes} \"#{args}\"`
+                puts "Queued: Pos #{pos}, Thread1 #{thread_count1}, Thread2 #{thread_count2}, Depth #{depth}"
+            end
+        end
+    end
+end
