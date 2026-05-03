@@ -1,3 +1,5 @@
+[Link to fork of Stockfish with our changes to the transposition table](https://github.com/charlesk2005/CS470-Stockfish)
+
 Basic, quick test:
 
 ```
